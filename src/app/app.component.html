@@ -1,0 +1,48 @@
+<div id="username-page">
+    <div class="username-page-container" *ngIf="!connected">
+        <h1 class="title">Type your username</h1>
+        <form>
+            <div class="form-group">
+                <input type="text" name="text" id="name" placeholder="Username" autocomplete="off" class="form-control"
+                    [(ngModel)]="name" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="accent username-submit" (click)="connect()">Start Chatting</button>
+            </div>
+        </form>
+    </div>
+    <div id="chat-page" *ngIf="connected">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>Spring WebSocket Chat Demo</h2>
+                <div>
+                    connected as <b>{{messaggi[0].sender}}</b>
+                </div>
+            </div>
+            <ul #scroll class="messageArea">
+                <li *ngFor="let messaggio of messaggi">
+                    <div *ngIf="messaggio.type == 'CHAT'" class="chat-message">
+                        <i [ngStyle]="applyStyle(messaggio.sender)" class="circle">
+                            <span style="color: white">{{messaggio.sender | slice:0:1 }}</span>
+                        </i>
+                        <div class="message-content">
+                            <b>{{messaggio.sender}}</b>  <p>{{messaggio.content}}</p>
+                        </div>
+                    </div>
+                    <div *ngIf="messaggio.type == 'JOIN' || messaggio.type == 'LEAVE'" class ="event-message">
+                        <p>{{messaggio.content}}</p>
+                    </div>
+                </li>
+            </ul>
+            <form id="messageForm" name="messageForm">
+                <div class="form-group">
+                    <div class="input-group clearfix">
+                        <input type="text" name="text" id="message" placeholder="Type a message..." autocomplete="off"
+                            class="form-control" [(ngModel)]="content" />
+                        <button type="submit" class="primary" (click)="sendMessage(content)">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
