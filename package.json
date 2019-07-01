@@ -3,18 +3,20 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-	"postinstall": "ng build --prod"
+    "postinstall": "ng build --prod"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^6.0.2",
+    "@angular/cli": "~6.0.3",
     "@angular/common": "^6.0.2",
     "@angular/compiler": "^6.0.2",
+    "@angular/compiler-cli": "^6.0.2",
     "@angular/core": "^6.0.2",
     "@angular/forms": "^6.0.2",
     "@angular/http": "^6.0.2",
@@ -25,11 +27,11 @@
     "@stomp/stompjs": "^4.0.7",
     "@types/stompjs": "^2.3.4",
     "core-js": "^2.5.4",
+    "express": "^4.17.1",
+    "path": "^0.12.7",
     "rxjs": "6.0.0",
-    "zone.js": "^0.8.26",
-	"@angular/cli": "~6.0.3",
-	"@angular/compiler-cli": "^6.0.2",
-	"typescript": "~2.7.2"
+    "typescript": "~2.7.2",
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^6.0.2",
