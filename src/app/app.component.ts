@@ -1,3 +1,4 @@
+import { WebsocketService } from './service/websocket-service';
 import { ChatMessage } from './ChatMessage';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 
@@ -17,12 +18,13 @@ export class AppComponent {
   content: string;
   private color: string[] = ['#2196F3', '#32c787', '#00BCD4', '#ff5652', '#ffc107', '#ff85af', '#FF9800', '#39bbb0']
   messaggi: ChatMessage[] = [];
+  oldMessaggi: ChatMessage[] = [];
   public connected: boolean = false;
   public stompClient = null;
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor() { }
+  constructor(private webSocketService : WebsocketService) { }
 
   ngAfterViewChecked() {        
     this.scrollToBottom();        
@@ -35,6 +37,14 @@ export class AppComponent {
       // Stomp.over funziona solo con la versione 4.0.7 di @stomp/stompjs
       this.stompClient = Stomp.over(socket);
       let name = this.name;
+      this.webSocketService.getMessage().subscribe(
+        messagges => {
+          this.oldMessaggi = messagges;
+        },
+        err => {
+          console.log(err);
+        }
+      )
       //necessaria poichè la variabile messaggi risulta undefined all'interno della connect
       const mex = this.messaggi;
   
@@ -57,6 +67,7 @@ export class AppComponent {
   
         //Invio Username
         this.stompClient.send('/app/chat.addUser', {}, JSON.stringify({ sender: name, type: 'JOIN' }));
+        
       }, this.onError);
     }
   }

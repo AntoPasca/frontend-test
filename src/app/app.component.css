@@ -185,7 +185,18 @@ button.accent {
 
 .message-content{
    text-align: left;
+   width: 80%;
 }
+.message-content-time{
+    margin-top:2%;
+    text-align: right;
+    width: 20%;
+ }
+
+ .text-time{
+    color: #b9b9b9 !important;
+    font-size: small;
+ }
 
 #chat-page .event-message p {
     color: #777;
@@ -193,9 +204,10 @@ button.accent {
     word-wrap: break-word;
 }
 
-#chat-message {
+.chat-message {
     padding-left: 68px;
     position: relative;
+    display: flex;
 }
 
 #circle {
