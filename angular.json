@@ -28,6 +28,22 @@
             "scripts": []
           },
           "configurations": {
+            "svil": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.svil.ts"
+                }
+              ]
+            },
+            "release": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.release.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -55,6 +71,9 @@
           "configurations": {
             "production": {
               "browserTarget": "websocket:build:production"
+            },
+            "svil": {
+              "browserTarget": "websocket:build:svil"
             }
           }
         },

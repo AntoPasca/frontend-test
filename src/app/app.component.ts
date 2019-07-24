@@ -3,6 +3,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { UrlPath } from './app.costants';
 
 @Component({
   selector: 'app-root',
@@ -22,31 +23,31 @@ export class AppComponent {
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor() { }
+  constructor(private urlPath: UrlPath) { }
 
-  ngAfterViewChecked() {        
-    this.scrollToBottom();        
-  } 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
   connect() {
-    if(this.name){
-      const socket = new SockJS('http://websocket-chat-websocketchat.apps.us-west-2.online-starter.openshift.com/websocket/ws');
-  
+    if (this.name) {
+      const socket = new SockJS(this.urlPath.webSocketChatUrl);
+      console.log("socket url", this.urlPath.webSocketChatUrl);
       // Stomp.over funziona solo con la versione 4.0.7 di @stomp/stompjs
       this.stompClient = Stomp.over(socket);
       let name = this.name;
       //necessaria poichè la variabile messaggi risulta undefined all'interno della connect
       const mex = this.messaggi;
-  
+
       // argomenti della connect -> primo : header , secondo: callback , terzo: error
       this.stompClient.connect({}, () => {
         //Subscribe al topic public
         this.connected = true;
         this.stompClient.subscribe('/topic/public', function (payload) {
-  
+
           let message = new ChatMessage();
           message = JSON.parse(payload.body);
-  
+
           if (message.type === 'JOIN') {
             message.content = message.sender + ' joined!';
           } else if (message.type === 'LEAVE') {
@@ -54,7 +55,7 @@ export class AppComponent {
           }
           mex.push(message);
         });
-  
+
         //Invio Username
         this.stompClient.send('/app/chat.addUser', {}, JSON.stringify({ sender: name, type: 'JOIN' }));
       }, this.onError);
@@ -94,9 +95,9 @@ export class AppComponent {
   }
 
   scrollToBottom(): void {
-        try {
-            this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        } catch(err) { }                 
-    }
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
 
 }
