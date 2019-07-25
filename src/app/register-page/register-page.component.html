@@ -1,0 +1,31 @@
+<div id="username-page">
+  <div class="username-page-container">
+    <h1 class="title">Registrazione</h1>
+    <img src="../assets/logo.png">
+    <br>
+    <br>
+    <form #regForm="ngForm" (ngSubmit)="registra(regForm)">
+      <div class="form-group">
+        <input type="text"  name="nome" id="nome" placeholder="Nome" autocomplete="off" class="form-control" ngModel required />
+      </div>
+      <div class="form-group">
+        <input type="text"  name="cognome" id="cognome" placeholder="Cognome" autocomplete="off" class="form-control" ngModel required/>
+      </div>
+      <div class="form-group">
+        <input type="email"  name="email" id="email" placeholder="Email@" autocomplete="off" class="form-control" ngModel required/>
+      </div>
+      <div class="form-group">
+        <input type="text" name="username" id="username" placeholder="Username" autocomplete="off" class="form-control" ngModel required />
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off" class="form-control" ngModel required />
+      </div>
+      <div class="form-group">
+        <button type="submit" class="primary">Registra</button>
+      </div>
+    </form>
+      <div class="form-group">
+        <button class="accent username-submit" (click)="backPage()">Indietro</button>
+      </div>
+  </div>
+</div>
