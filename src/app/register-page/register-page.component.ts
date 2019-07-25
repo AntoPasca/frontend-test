@@ -18,11 +18,7 @@ export class RegisterPageComponent implements OnInit {
 
   registra(form : FormGroup){
     let user : User = new User();
-    user.username = "ant";
-    user.nome = "antonio";
-    user.cognome = "antonio";
-    user.email = "antonio";
-    user.password = "antonio";
+    user = <User> form.value;
     this.userService.registra(user).subscribe(
       data => {
         alert("REGISTRATO");
