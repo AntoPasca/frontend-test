@@ -22,4 +22,10 @@ export class UserService{
         return this.http.post<User>(this.urlPath.loginUtente, user);
     }
 
+    public getUtente(username : User) : Observable<Array<User>> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const params = encodeURIComponent(JSON.stringify(username));
+        return this.http.get<Array<User>>(this.urlPath.userPath + "/?params=" + params , { headers : headers});
+    }
+
 }
