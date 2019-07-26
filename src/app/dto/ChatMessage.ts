@@ -1,10 +1,11 @@
-import { Conversation } from './Conversation';
 import { User } from "./User";
+import { Room } from './Room';
+import { ChatMessageType } from '../enum/ChatMessageType';
 
 export class ChatMessage {
-    public type : string;
-    public content : string;
-    public  sender : User;
-    public conversation : Conversation;
+    public type: ChatMessageType;
+    public content: string;
+    public sender: User;
+    public room: Room;
     public sendTime: Date;
 }

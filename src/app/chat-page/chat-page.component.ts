@@ -1,13 +1,14 @@
-import { Conversation } from './../dto/Conversation';
 import { UserService } from './../service/user-service';
 import { ChatMessage } from '../dto/ChatMessage';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import { WebsocketService } from '../service/websocket-service';
 import { UrlPath } from '../app.costants';
 import { User } from '../dto/User';
 import { Subscription } from 'rxjs';
+import { RoomService } from '../service/room-service';
+import { Room } from '../dto/Room';
+import { ChatMessageType } from '../enum/ChatMessageType';
 
 @Component({
   selector: 'app-chat-page',
@@ -22,33 +23,34 @@ export class ChatPageComponent implements OnInit {
   messaggi: ChatMessage[] = [];
   oldMessaggi: ChatMessage[] = [];
   topic: string;
-  user : User = new User();
-  conversation : Conversation = new Conversation();
-  stompSubscription : Subscription;
+  user: User = new User();
+  room: Room = new Room();
+  stompSubscription: Subscription;
   public connected: boolean = false;
   public stompClient = null;
+  ChatMessageType = ChatMessageType;
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor(private webSocketService: WebsocketService, private urlPath: UrlPath, private userService : UserService) { }
+  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.username = localStorage.getItem("username");
     this.topic = '/topic/public';
     this.getUser();
   }
 
-  getUser(){
-    let user : User = new User();
+  getUser() {
+    let user: User = new User();
     user.username = this.username;
     this.userService.getUtente(user).toPromise().then(
       userData => {
         this.user = userData[0];
-        this.getConversation();
+        this.getRoom();
       },
       error => {
         console.log('Error get user', error);
@@ -56,10 +58,16 @@ export class ChatPageComponent implements OnInit {
     )
   }
 
-  getConversation(){
-    this.conversation.creator = this.user;
-    this.conversation.title = this.topic;
-    this.connect();
+  getRoom() {
+    this.room.creator = this.user;
+    this.room.title = this.topic;
+    let room = new Room();
+    room.title = "public";
+
+    this.roomService.getStanza(room).subscribe(room => {
+      this.room = room[0];
+      this.connect();
+    }, err => console.log("errore recupero info stanza", err));
   }
 
   connect() {
@@ -68,10 +76,14 @@ export class ChatPageComponent implements OnInit {
 
       // Stomp.over funziona solo con la versione 4.0.7 di @stomp/stompjs
       this.stompClient = Stomp.over(socket);
-      let username = this.username;
-      this.webSocketService.getMessage().toPromise().then(
+
+      let chatMessageExample = new ChatMessage();
+      chatMessageExample.room = this.room;
+
+      this.roomService.getMessages(this.room.id, chatMessageExample).toPromise().then(
         messagges => {
           this.oldMessaggi = messagges;
+          console.log("old messages", this.oldMessaggi);
         },
         err => {
           console.log(err);
@@ -89,9 +101,9 @@ export class ChatPageComponent implements OnInit {
           let message = new ChatMessage();
           message = JSON.parse(payload.body);
 
-          if (message.type === 'JOIN') {
+          if (message.type === ChatMessageType.JOIN) {
             message.content = message.sender.username + ' joined!';
-          } else if (message.type === 'LEAVE') {
+          } else if (message.type === ChatMessageType.LEAVE) {
             message.content = message.sender.username + ' left!';
           }
           mex.push(message);
@@ -100,26 +112,27 @@ export class ChatPageComponent implements OnInit {
         //Invio Username
         let messageJoinUser = new ChatMessage();
         messageJoinUser.sender = this.user;
-        messageJoinUser.type = 'JOIN';
-        messageJoinUser.conversation = this.conversation;
-        console.log(JSON.stringify({messageJoinUser}.messageJoinUser));
-        this.stompClient.send('/app/chat.addUser', {}, JSON.stringify( {messageJoinUser}.messageJoinUser ));
+        messageJoinUser.type = ChatMessageType.JOIN;
+        messageJoinUser.room = this.room;
+        console.log(JSON.stringify({ messageJoinUser }.messageJoinUser));
+        this.stompClient.send('/app/chat.addUser', {}, JSON.stringify({ messageJoinUser }.messageJoinUser));
 
       }, this.onError);
     }
   }
 
 
-  sendMessage(message: string) {
+  sendMessage(content: string) {
 
     //Controllo se esiste la connessione e il messaggio
-    if (message && this.stompClient) {
+    if (content && this.stompClient) {
 
       //Creo l'oggetto messaggio
       let chatMessage = new ChatMessage();
-      // chatMessage.sender = this.username;
-      chatMessage.content = message;
-      chatMessage.type = 'CHAT';
+      chatMessage.sender = this.user;
+      chatMessage.type = ChatMessageType.CHAT;
+      chatMessage.room = this.room;
+      chatMessage.content = content;
 
       this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
       this.content = '';
@@ -146,8 +159,8 @@ export class ChatPageComponent implements OnInit {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
     } catch (err) { }
   }
-  ngOnDestroy(){
-    if(this.stompSubscription){
+  ngOnDestroy() {
+    if (this.stompSubscription) {
       this.stompSubscription.unsubscribe();
     }
   }

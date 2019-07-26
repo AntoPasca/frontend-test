@@ -1,6 +1,6 @@
-import { Conversation } from './Conversation';
 import { User } from './User';
+import { Room } from './Room';
 export class Partecipants {
-    public conversation : Conversation;
-    public users : Array<User>; 
+    public room: Room;
+    public users: Array<User>;
 }
