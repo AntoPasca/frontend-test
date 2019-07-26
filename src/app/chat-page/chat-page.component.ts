@@ -41,7 +41,19 @@ export class ChatPageComponent implements OnInit {
   ngOnInit() {
     this.username = localStorage.getItem("username");
     this.topic = '/topic/public';
-    this.getUser();
+    this.getRoom("public");
+  }
+
+  getRoom(topicTitle: string) {
+    this.room.creator = this.user;
+    this.room.title = this.topic;
+    let room = new Room();
+    room.title = topicTitle;
+
+    this.roomService.getStanza(room).subscribe(room => {
+      this.room = room[0];
+      this.getUser();
+    }, err => console.log("errore recupero info stanza", err));
   }
 
   getUser() {
@@ -50,7 +62,7 @@ export class ChatPageComponent implements OnInit {
     this.userService.getUtente(user).toPromise().then(
       userData => {
         this.user = userData[0];
-        this.getRoom();
+        this.connect();
       },
       error => {
         console.log('Error get user', error);
@@ -58,17 +70,7 @@ export class ChatPageComponent implements OnInit {
     )
   }
 
-  getRoom() {
-    this.room.creator = this.user;
-    this.room.title = this.topic;
-    let room = new Room();
-    room.title = "public";
 
-    this.roomService.getStanza(room).subscribe(room => {
-      this.room = room[0];
-      this.connect();
-    }, err => console.log("errore recupero info stanza", err));
-  }
 
   connect() {
     if (this.username && this.messaggi) {
@@ -152,6 +154,12 @@ export class ChatPageComponent implements OnInit {
     var indexOfColour = Math.abs(i % this.color.length)
     const styles = { 'background': this.color[indexOfColour] };
     return styles;
+  }
+
+
+  changeRoom(titleTopic: string) {
+    this.stompSubscription.unsubscribe();
+    this.getRoom(titleTopic);
   }
 
   scrollToBottom(): void {
