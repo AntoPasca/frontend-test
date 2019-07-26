@@ -33,6 +33,9 @@
                     <b>{{messaggio.sender.username}}</b>
                     <p>{{messaggio.content}}</p>
                 </div>
+                <div class="message-content-time">
+                    <p class="text-time">{{messaggio.sendTime | date: 'dd/MM/yyyy  HH:mm'}}</p>
+                </div>
             </div>
             <div *ngIf="messaggio.type == ChatMessageType.JOIN || messaggio.type == ChatMessageType.LEAVE"
                 class="event-message">
