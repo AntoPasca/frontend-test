@@ -46,7 +46,8 @@ export class ChatPageComponent implements OnInit {
 
   getRoom(topicTitle: string) {
     this.room.creator = this.user;
-    this.room.title = this.topic;
+    this.room.title = topicTitle;
+    this.topic = '/topic/'.concat(topicTitle);
     let room = new Room();
     room.title = topicTitle;
 
@@ -82,7 +83,7 @@ export class ChatPageComponent implements OnInit {
       let chatMessageExample = new ChatMessage();
       chatMessageExample.room = this.room;
 
-      this.roomService.getMessages(this.room.id, chatMessageExample).toPromise().then(
+      this.roomService.getMessages(this.room.id, chatMessageExample).subscribe(
         messagges => {
           this.oldMessaggi = messagges;
           console.log("old messages", this.oldMessaggi);
@@ -92,6 +93,7 @@ export class ChatPageComponent implements OnInit {
         }
       )
       //necessaria poichè la variabile messaggi risulta undefined all'interno della connect
+      this.messaggi = [];
       const mex = this.messaggi;
 
       // argomenti della connect -> primo : header , secondo: callback , terzo: error

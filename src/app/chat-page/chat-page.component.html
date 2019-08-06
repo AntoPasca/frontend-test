@@ -2,7 +2,7 @@
     <div class="chat-header">
         <h2>Spring WebSocket Chat Demo</h2>
         <div>
-            connected as <b>{{username}}</b>
+            connected as <b>{{username}}</b> at room <b>{{room.title}}</b>
         </div>
     </div>
     <ul #scroll class="messageArea">
@@ -52,4 +52,13 @@
             </div>
         </div>
     </form>
+    <div class="room-container-title">
+        <h2>Rooms</h2>
+        <hr>
+    </div>
+    <div class="room-container">
+        <button class="room-button" (click)="changeRoom('public')">Public</button>
+        <button class="room-button" (click)="changeRoom('sport')">Sport</button>
+        <button class="room-button" (click)="changeRoom('lavoro')">Lavoro</button>
+    </div>
 </div>
