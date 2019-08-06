@@ -156,8 +156,8 @@ button.accent {
     background-color: #fff;
     box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
     margin-top: 30px;
-    height: calc(100% - 60px);
-    max-height: 600px !important;
+    height: calc(100% - 240px);
+    max-height: 550px !important;
     position: relative;
 }
 
@@ -198,7 +198,7 @@ button.accent {
 }
 
 .chat-container #messageForm {
-    padding: 20px;
+    padding: 10px;
 }
 
 .chat-container ul li {

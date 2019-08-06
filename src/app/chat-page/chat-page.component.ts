@@ -86,6 +86,7 @@ export class ChatPageComponent implements OnInit {
       this.roomService.getMessages(this.room.id, chatMessageExample).subscribe(
         messagges => {
           this.oldMessaggi = messagges;
+          this.oldMessaggi = this.oldMessaggi.filter( mex => mex.type != ChatMessageType.LEAVE);
           console.log("old messages", this.oldMessaggi);
         },
         err => {
@@ -161,6 +162,12 @@ export class ChatPageComponent implements OnInit {
 
   changeRoom(titleTopic: string) {
     this.stompSubscription.unsubscribe();
+    let chatMessage = new ChatMessage();
+      chatMessage.sender = this.user;
+      chatMessage.type = ChatMessageType.LEAVE;
+      chatMessage.room = this.room;
+      chatMessage.content = '';
+      this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
     this.getRoom(titleTopic);
   }
 
