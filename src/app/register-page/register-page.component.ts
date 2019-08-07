@@ -1,7 +1,7 @@
 import { UserService } from './../service/user-service';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../dto/User';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,21 +11,46 @@ import { Router } from '@angular/router';
 })
 export class RegisterPageComponent implements OnInit {
 
-  constructor(private userService : UserService , private route : Router) { }
+  registerForm : FormGroup;
+  submitted = false;
+  success = false;
+  error = false;
+
+  constructor(private userService : UserService , private route : Router, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.registerForm = this.formBuilder.group({
+      nome : ['', Validators.required],
+      cognome : ['', Validators.required],
+      email : ['', [Validators.required, Validators.email]],
+      username : ['', Validators.required],
+      password : ['', [Validators.required, Validators.minLength(8)]]
+    });
   }
 
-  registra(form : FormGroup){
+  get f() { return this.registerForm.controls; }
+
+  registra(){
+    this.success = false;
+    this.error = false;
+    this.submitted = true;
+    if(this.registerForm.invalid){
+      return
+    }
     let user : User = new User();
-    user = <User> form.value;
+    user = <User> this.registerForm.value;
     this.userService.registra(user).subscribe(
-      data => {
-        alert("REGISTRATO");
-        console.log("ciao")
+      (data : String) => {
+        console.log('id: ',data);
+        this.success = true;
+        // this.route.navigate(['']);
       },
-      error => {
-        console.log(error); 
+      err => {
+        let error = JSON.parse(err.error);
+        if(error.message == 'ERRREG'){
+          this.error = true;
+        }
+        console.log(err); 
       }
     )
   }

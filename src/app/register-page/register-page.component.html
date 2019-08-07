@@ -1,31 +1,57 @@
 <div id="username-page">
-  <div class="username-page-container">
-    <h1 class="title">Registrazione</h1>
-    <img src="../assets/logo.png">
+  <div class="username-page-container" style =" margin-top : -300px !important ; max-width: 750px">
+    <h2 class="title">Registrazione</h2>
     <br>
-    <br>
-    <form #regForm="ngForm" (ngSubmit)="registra(regForm)">
-      <div class="form-group">
-        <input type="text"  name="nome" id="nome" placeholder="Nome" autocomplete="off" class="form-control" ngModel required />
-      </div>
-      <div class="form-group">
-        <input type="text"  name="cognome" id="cognome" placeholder="Cognome" autocomplete="off" class="form-control" ngModel required/>
-      </div>
-      <div class="form-group">
-        <input type="email"  name="email" id="email" placeholder="Email@" autocomplete="off" class="form-control" ngModel required/>
-      </div>
-      <div class="form-group">
-        <input type="text" name="username" id="username" placeholder="Username" autocomplete="off" class="form-control" ngModel required />
-      </div>
-      <div class="form-group">
-        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off" class="form-control" ngModel required />
-      </div>
-      <div class="form-group">
-        <button type="submit" class="primary">Registra</button>
-      </div>
+    <form [formGroup]="registerForm" (ngSubmit)="registra()">
+        <div class="form-group" style="display:flex">
+            <span class="col-md-2" style="text-align:left">Nome</span>
+            <input placeholder="Nome" type="text" formControlName="nome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nome.errors }" />
+            <div *ngIf="submitted && f.nome.errors" class="invalid-feedback">
+                <div *ngIf="f.nome.errors.required">Nome obbligatorio!</div>
+            </div>
+        </div>
+        <div class="form-group" style="display:flex">
+            <span class="col-md-2" style="text-align:left">Cognome</span>
+            <input placeholder="Cognome" type="text" formControlName="cognome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.cognome.errors }" />
+            <div *ngIf="submitted && f.cognome.errors" class="invalid-feedback">
+                <div *ngIf="f.cognome.errors.required">Cognome obbligatorio!</div>
+            </div>
+        </div>
+        <div class="form-group" style="display:flex">
+            <span class="col-md-2" style="text-align:left">Email</span>
+            <input placeholder="@Email" type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email obbligatoria</div>
+                <div *ngIf="f.email.errors.email">Inserire email valida</div>
+            </div>
+        </div>
+        <div class="form-group" style="display:flex">
+            <span class="col-md-2" style="text-align:left">Username</span>
+            <input placeholder="Username" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.required">Username obbligatorio!</div>
+            </div>
+        </div>
+        <div class="form-group" style="display:flex">
+            <span class="col-md-2" style="text-align:left">Password</span>
+            <input placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password obbligatoria!</div>
+                <div *ngIf="f.password.errors.minlength">La password deve contenere almeno 8 caratteri</div>
+            </div>
+        </div>
+        <div *ngIf="success" class="alert alert-success" role="alert">
+            Utente Registrato con successo
+        </div>
+        <div *ngIf="error" class="alert alert-warning" role="alert">
+            Username o email già presenti!
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary">Registra</button>
+        </div>
     </form>
-      <div class="form-group">
-        <button class="accent username-submit" (click)="backPage()">Indietro</button>
-      </div>
+    <div class="form-group">
+      <button class="btn btn-secondary btn-sm" (click)="backPage()">Indietro</button>
+    </div>
   </div>
 </div>

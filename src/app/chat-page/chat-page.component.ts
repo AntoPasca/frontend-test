@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { RoomService } from '../service/room-service';
 import { Room } from '../dto/Room';
 import { ChatMessageType } from '../enum/ChatMessageType';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat-page',
@@ -32,16 +33,21 @@ export class ChatPageComponent implements OnInit {
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService) { }
+  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService, private route : Router) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
   ngOnInit() {
-    this.username = localStorage.getItem("username");
-    this.topic = '/topic/public';
-    this.getRoom("public");
+    if(localStorage.getItem("username")){
+      this.username = localStorage.getItem("username");
+      this.topic = '/topic/public';
+      this.getRoom("public");
+    }
+    else{
+      this.route.navigate(['']);
+    }
   }
 
   getRoom(topicTitle: string) {

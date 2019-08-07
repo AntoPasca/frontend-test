@@ -12,13 +12,18 @@ export class LoginPageComponent implements OnInit {
 
   username: string = '';
   password: string = '';
+  errusr = false;
+  errpsw = false;
 
   constructor(private router: Router, private userService : UserService) { }
 
   ngOnInit() {
+    localStorage.removeItem("username");
   }
 
   login(){
+    this.errpsw = false;
+    this.errusr = false;
     let user : User = new User();
     user.username = this.username;
     user.password = this.password;
@@ -28,8 +33,14 @@ export class LoginPageComponent implements OnInit {
         localStorage.setItem("username",this.username);
         this.router.navigate(['/chat']);
       },
-      error => {
-        console.log(error);
+      err => {
+        if(err.error.message == 'ERRUSR'){
+          this.errusr = true;
+        }
+        else if(err.error.message == 'ERRPSW'){
+          this.errpsw = true;
+        }
+        console.log(err);
       }
     )
     

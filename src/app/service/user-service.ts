@@ -14,8 +14,8 @@ export class UserService{
 
     constructor (private http : HttpClient, private urlPath: UrlPath) {}
     
-    public registra(user: User) : Observable<any>{
-        return this.http.post(this.urlPath.registraUtente, user);
+    public registra(user: User) : Observable<String>{
+        return this.http.post(this.urlPath.registraUtente, user, { responseType : "text" });
     }
 
     public login(user: User) : Observable<User>{
