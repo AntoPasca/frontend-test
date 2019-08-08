@@ -11,6 +11,7 @@ import { RoomService } from '../service/room-service';
 import { Room } from '../dto/Room';
 import { ChatMessageType } from '../enum/ChatMessageType';
 import { Router } from '@angular/router';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -24,33 +25,40 @@ export class ChatPageComponent implements OnInit {
   content: string;
   private color: string[] = ['#2196F3', '#32c787', '#00BCD4', '#ff5652', '#ffc107', '#ff85af', '#FF9800', '#39bbb0']
   messaggi: ChatMessage[] = [];
-  oldMessaggi: ChatMessage[] = [];
   topic: string;
   user: User = new User();
   room: Room = new Room();
 
-  stompSubscription: Subscription;
-  public connected: boolean = false;
   public delete: boolean = false;
-  public stompClient = null;
+  public stompClient: Stomp.Client = null;
+  topicSubscription: Stomp.StompSubscription = null;
   ChatMessageType = ChatMessageType;
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService, private route : Router, private messageService : MessageService) { }
+  constructor(private urlPath: UrlPath,
+    private userService: UserService,
+    private roomService: RoomService,
+    private route: Router,
+    private messageService: MessageService,
+    private loginService: LoginService) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
   ngOnInit() {
-    if(localStorage.getItem("username")){
+    if (localStorage.getItem("username")) {
       this.username = localStorage.getItem("username");
       this.role = localStorage.getItem("role");
       this.topic = '/topic/public';
-      this.getRoom("public");
     }
-  
+    this.loginService.connectApplication().subscribe(isConnected => {
+      if (this.loginService.stompClient.connected) {
+        this.stompClient = this.loginService.stompClient;
+        this.getRoom("public");
+      }
+    });
   }
 
   getRoom(topicTitle: string) {
@@ -72,7 +80,7 @@ export class ChatPageComponent implements OnInit {
     this.userService.getUtente(user).toPromise().then(
       userData => {
         this.user = userData[0];
-        this.connect();
+        this.loadMessages();
       },
       error => {
         console.log('Error get user', error);
@@ -82,57 +90,30 @@ export class ChatPageComponent implements OnInit {
 
 
 
-  connect() {
-    if (this.username && this.messaggi) {
-      const socket = new SockJS(this.urlPath.webSocketChatUrl);
+  loadMessages() {
+    //necessaria poichè la variabile messaggi risulta undefined all'interno della connect
+    this.messaggi = [];
+    const mex = this.messaggi;
 
-      // Stomp.over funziona solo con la versione 4.0.7 di @stomp/stompjs
-      this.stompClient = Stomp.over(socket);
+    // argomenti della connect -> primo : header , secondo: callback , terzo: error
+    this.topicSubscription = this.stompClient.subscribe(this.topic, function (payload) {
+      let message = new ChatMessage();
+      message = JSON.parse(payload.body);
+      if (message.type === ChatMessageType.JOIN) {
+        message.content = message.sender.username + ' joined!';
+      } else if (message.type === ChatMessageType.LEAVE) {
+        message.content = message.sender.username + ' left!';
+      }
+      mex.push(message);
+    });
 
-      let chatMessageExample = new ChatMessage();
-      chatMessageExample.room = this.room;
-
-      this.roomService.getMessages(this.room.id, chatMessageExample).subscribe(
-        messagges => {
-          this.oldMessaggi = messagges;
-          this.oldMessaggi = this.oldMessaggi.filter( mex => mex.type != ChatMessageType.LEAVE);
-          console.log("old messages", this.oldMessaggi);
-        },
-        err => {
-          console.log(err);
-        }
-      )
-      //necessaria poichè la variabile messaggi risulta undefined all'interno della connect
-      this.messaggi = [];
-      const mex = this.messaggi;
-
-      // argomenti della connect -> primo : header , secondo: callback , terzo: error
-      this.stompClient.connect({}, () => {
-        //Subscribe al topic public
-        this.connected = true;
-        this.stompSubscription = this.stompClient.subscribe(this.topic, function (payload) {
-
-          let message = new ChatMessage();
-          message = JSON.parse(payload.body);
-
-          if (message.type === ChatMessageType.JOIN) {
-            message.content = message.sender.username + ' joined!';
-          } else if (message.type === ChatMessageType.LEAVE) {
-            message.content = message.sender.username + ' left!';
-          }
-          mex.push(message);
-        });
-
-        //Invio Username
-        let messageJoinUser = new ChatMessage();
-        messageJoinUser.sender = this.user;
-        messageJoinUser.type = ChatMessageType.JOIN;
-        messageJoinUser.room = this.room;
-        console.log(JSON.stringify({ messageJoinUser }.messageJoinUser));
-        this.stompClient.send('/app/chat.addUser', {}, JSON.stringify({ messageJoinUser }.messageJoinUser));
-
-      }, this.onError);
-    }
+    //Invio Username - TODO: decidere se farlo BE
+    let messageJoinUser = new ChatMessage();
+    messageJoinUser.sender = this.user;
+    messageJoinUser.type = ChatMessageType.JOIN;
+    messageJoinUser.room = this.room;
+    console.log(JSON.stringify({ messageJoinUser }.messageJoinUser));
+    this.stompClient.send('/app/chat.addUser', {}, JSON.stringify({ messageJoinUser }.messageJoinUser));
   }
 
 
@@ -170,34 +151,34 @@ export class ChatPageComponent implements OnInit {
 
 
   changeRoom(titleTopic: string) {
-    this.stompSubscription.unsubscribe();
+    this.topicSubscription.unsubscribe();
     let chatMessage = new ChatMessage();
-      chatMessage.sender = this.user;
-      chatMessage.type = ChatMessageType.LEAVE;
-      chatMessage.room = this.room;
-      chatMessage.content = '';
-      this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+    chatMessage.sender = this.user;
+    chatMessage.type = ChatMessageType.LEAVE;
+    chatMessage.room = this.room;
+    chatMessage.content = '';
+    this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
     this.getRoom(titleTopic);
   }
 
-  clickDelete(messaggio : ChatMessage){
-    if(messaggio.type == ChatMessageType.CHAT && localStorage.getItem("role") == 'ADMIN'){
-      if(this.delete){
-        this.delete = false;
-      }
-      else this.delete = true;
-      this.messageService.eliminaMessaggio(messaggio.id).subscribe(
-        data => {
-          this.oldMessaggi = this.oldMessaggi.filter( mex => mex.id != messaggio.id);
-          this.messaggi = this.messaggi.filter( mex => mex.id != messaggio.id);
-          console.log(data);
-          console.log("MESSAGGI ", this.messaggi);
-        },
-        err => {
-          console.log(err);
-        }
-      )
-    }
+  clickDelete(messaggio: ChatMessage) {
+    // if (messaggio.type == ChatMessageType.CHAT && localStorage.getItem("role") == 'ADMIN') {
+    //   if (this.delete) {
+    //     this.delete = false;
+    //   }
+    //   else this.delete = true;
+    //   this.messageService.eliminaMessaggio(messaggio.id).subscribe(
+    //     data => {
+    //       this.oldMessaggi = this.oldMessaggi.filter(mex => mex.id != messaggio.id);
+    //       this.messaggi = this.messaggi.filter(mex => mex.id != messaggio.id);
+    //       console.log(data);
+    //       console.log("MESSAGGI ", this.messaggi);
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   )
+    // }
   }
 
   scrollToBottom(): void {
@@ -205,9 +186,13 @@ export class ChatPageComponent implements OnInit {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
     } catch (err) { }
   }
+
   ngOnDestroy() {
-    if (this.stompSubscription) {
-      this.stompSubscription.unsubscribe();
+    // logout 
+    this.loginService.disconnectApplication();
+    // room disconnection
+    if (this.topicSubscription) {
+      this.topicSubscription.unsubscribe();
     }
   }
 }
