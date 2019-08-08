@@ -15,37 +15,36 @@ export class LoginPageComponent implements OnInit {
   errusr = false;
   errpsw = false;
 
-  constructor(private router: Router, private userService : UserService) { }
+  constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit() {
     localStorage.removeItem("username");
   }
 
-  login(){
+  login() {
     this.errpsw = false;
     this.errusr = false;
-    let user : User = new User();
+    let user: User = new User();
     user.username = this.username;
     user.password = this.password;
     this.userService.login(user).subscribe(
       data => {
         console.log(data);
-        localStorage.setItem("username",this.username);
+        localStorage.setItem("username", this.username);
         this.router.navigate(['/chat']);
       },
       err => {
-        if(err.error.message == 'ERRUSR'){
+        if (err.error.message == 'ERRUSR') {
           this.errusr = true;
         }
-        else if(err.error.message == 'ERRPSW'){
+        else if (err.error.message == 'ERRPSW') {
           this.errpsw = true;
         }
-        console.log(err);
       }
     )
-    
+
   }
-  register(){
+  register() {
     this.router.navigate(['/signup']);
   }
 }

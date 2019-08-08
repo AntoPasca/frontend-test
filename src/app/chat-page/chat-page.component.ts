@@ -33,20 +33,17 @@ export class ChatPageComponent implements OnInit {
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService, private route : Router) { }
+  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService, private route: Router) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
   ngOnInit() {
-    if(localStorage.getItem("username")){
+    if (localStorage.getItem("username")) {
       this.username = localStorage.getItem("username");
       this.topic = '/topic/public';
       this.getRoom("public");
-    }
-    else{
-      this.route.navigate(['']);
     }
   }
 
@@ -92,7 +89,7 @@ export class ChatPageComponent implements OnInit {
       this.roomService.getMessages(this.room.id, chatMessageExample).subscribe(
         messagges => {
           this.oldMessaggi = messagges;
-          this.oldMessaggi = this.oldMessaggi.filter( mex => mex.type != ChatMessageType.LEAVE);
+          this.oldMessaggi = this.oldMessaggi.filter(mex => mex.type != ChatMessageType.LEAVE);
           console.log("old messages", this.oldMessaggi);
         },
         err => {
@@ -169,11 +166,11 @@ export class ChatPageComponent implements OnInit {
   changeRoom(titleTopic: string) {
     this.stompSubscription.unsubscribe();
     let chatMessage = new ChatMessage();
-      chatMessage.sender = this.user;
-      chatMessage.type = ChatMessageType.LEAVE;
-      chatMessage.room = this.room;
-      chatMessage.content = '';
-      this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+    chatMessage.sender = this.user;
+    chatMessage.type = ChatMessageType.LEAVE;
+    chatMessage.room = this.room;
+    chatMessage.content = '';
+    this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
     this.getRoom(titleTopic);
   }
 
