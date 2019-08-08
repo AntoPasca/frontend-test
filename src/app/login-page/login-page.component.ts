@@ -2,6 +2,7 @@ import { UserService } from './../service/user-service';
 import { User } from './../dto/User';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,7 @@ export class LoginPageComponent implements OnInit {
   errusr = false;
   errpsw = false;
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(private router: Router, private userService: UserService, private loginService: LoginService) { }
 
   ngOnInit() {
     localStorage.removeItem("username");
@@ -31,6 +32,7 @@ export class LoginPageComponent implements OnInit {
       data => {
         console.log(data);
         localStorage.setItem("username", this.username);
+        this.loginService.setLoggedIn(true);
         this.router.navigate(['/chat']);
       },
       err => {
