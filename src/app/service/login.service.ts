@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { UrlPath } from '../app.costants';
+import { User } from '../dto/User';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class LoginService {
   private loggedIn: BehaviorSubject<boolean>;
   public isConnected = new Subject<boolean>();
   public stompClient: Stomp.Client = null;
+  private userConnected: User = null;
 
   constructor(private urlPath: UrlPath) {
     this.loggedIn = new BehaviorSubject<boolean>(false);
@@ -28,11 +30,10 @@ export class LoginService {
     return this.loggedIn.asObservable();
   }
 
-  public connectApplication(): Subject<boolean> {
+  public connectApplication(userId: string): Subject<boolean> {
     const socket = new SockJS(this.urlPath.webSocketChatUrl);
     this.stompClient = Stomp.over(socket);
-
-    this.stompClient.connect({}, () => {
+    this.stompClient.connect({ userId: userId }, () => {
       this.isConnected.next(true);
     }, () => console.log("stomp client error")
     );
@@ -45,4 +46,11 @@ export class LoginService {
     }
   }
 
+  getConnectedUser(): User {
+    return this.userConnected;
+  }
+
+  setConnectedUser(user: User) {
+    this.userConnected = user;
+  }
 }

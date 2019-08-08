@@ -23,7 +23,7 @@ export class LoginPageComponent implements OnInit {
     localStorage.removeItem("role");
   }
 
-  login(){
+  login() {
     this.errpsw = false;
     this.errusr = false;
     let user: User = new User();
@@ -32,7 +32,7 @@ export class LoginPageComponent implements OnInit {
     this.userService.login(user).subscribe(
       data => {
         console.log(data);
-        localStorage.setItem("username", this.username);
+        this.loginService.setConnectedUser(data);
         this.loginService.setLoggedIn(true);
         this.router.navigate(['/chat']);
       },

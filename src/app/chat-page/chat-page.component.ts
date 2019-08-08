@@ -48,12 +48,9 @@ export class ChatPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (localStorage.getItem("username")) {
-      this.username = localStorage.getItem("username");
-      this.role = localStorage.getItem("role");
-      this.topic = '/topic/public';
-    }
-    this.loginService.connectApplication().subscribe(isConnected => {
+    this.topic = '/topic/public';
+    this.user = this.loginService.getConnectedUser();
+    this.loginService.connectApplication(this.user.id).subscribe(isConnected => {
       if (this.loginService.stompClient.connected) {
         this.stompClient = this.loginService.stompClient;
         this.getRoom("public");
