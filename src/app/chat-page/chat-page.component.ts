@@ -50,9 +50,7 @@ export class ChatPageComponent implements OnInit {
       this.topic = '/topic/public';
       this.getRoom("public");
     }
-    else{
-      this.route.navigate(['']);
-    }
+  
   }
 
   getRoom(topicTitle: string) {
@@ -139,7 +137,7 @@ export class ChatPageComponent implements OnInit {
 
 
   sendMessage(content: string) {
-    console.log("MESSAGGI ", this.messaggi);
+
     //Controllo se esiste la connessione e il messaggio
     if (content && this.stompClient) {
 

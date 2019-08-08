@@ -2,6 +2,7 @@ import { UserService } from './../service/user-service';
 import { User } from './../dto/User';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,7 @@ export class LoginPageComponent implements OnInit {
   errusr = false;
   errpsw = false;
 
-  constructor(private router: Router, private userService : UserService) { }
+  constructor(private router: Router, private userService: UserService, private loginService: LoginService) { }
 
   ngOnInit() {
     localStorage.removeItem("username");
@@ -25,29 +26,28 @@ export class LoginPageComponent implements OnInit {
   login(){
     this.errpsw = false;
     this.errusr = false;
-    let user : User = new User();
+    let user: User = new User();
     user.username = this.username;
     user.password = this.password;
     this.userService.login(user).subscribe(
       data => {
         console.log(data);
-        localStorage.setItem("username",this.username);
-        localStorage.setItem("role",data.role);
+        localStorage.setItem("username", this.username);
+        this.loginService.setLoggedIn(true);
         this.router.navigate(['/chat']);
       },
       err => {
-        if(err.error.message == 'ERRUSR'){
+        if (err.error.message == 'ERRUSR') {
           this.errusr = true;
         }
-        else if(err.error.message == 'ERRPSW'){
+        else if (err.error.message == 'ERRPSW') {
           this.errpsw = true;
         }
-        console.log(err);
       }
     )
-    
+
   }
-  register(){
+  register() {
     this.router.navigate(['/signup']);
   }
 }
