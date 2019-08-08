@@ -19,6 +19,7 @@ export class LoginPageComponent implements OnInit {
 
   ngOnInit() {
     localStorage.removeItem("username");
+    localStorage.removeItem("role");
   }
 
   login(){
@@ -31,6 +32,7 @@ export class LoginPageComponent implements OnInit {
       data => {
         console.log(data);
         localStorage.setItem("username",this.username);
+        localStorage.setItem("role",data.role);
         this.router.navigate(['/chat']);
       },
       err => {

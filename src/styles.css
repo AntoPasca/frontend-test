@@ -303,6 +303,21 @@ button.accent {
     width: 100%;
 }
 
+.admin{
+    width: auto;
+    padding: 10px;
+    margin: -5px auto;
+}
+
+.admin:hover{
+    background-color: rgb(253, 198, 198);
+    border-radius: 20px;
+    content: 'DELETE';
+}
+.admin:hover .text-time{
+    color: #6b6b6b !important;
+}
+
 
 @media screen and (max-width: 730px) {
 

@@ -9,6 +9,8 @@ export class UrlPath {
     public webSocketChatUrl = this.basePath.concat("ws");
     public registraUtente = this.userPath;
     public loginUtente = this.userPath.concat("login/");
+    public eliminaMessaggio = this.basePath.concat("${messageId}");
+
 
     // room 
     public roomPath = this.basePath.concat("stanza/");

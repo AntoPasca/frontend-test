@@ -1,3 +1,4 @@
+import { MessageService } from './../service/message-service';
 import { UserService } from './../service/user-service';
 import { ChatMessage } from '../dto/ChatMessage';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
@@ -19,6 +20,7 @@ import { Router } from '@angular/router';
 export class ChatPageComponent implements OnInit {
   title = 'app';
   username: string;
+  role: string;
   content: string;
   private color: string[] = ['#2196F3', '#32c787', '#00BCD4', '#ff5652', '#ffc107', '#ff85af', '#FF9800', '#39bbb0']
   messaggi: ChatMessage[] = [];
@@ -26,14 +28,16 @@ export class ChatPageComponent implements OnInit {
   topic: string;
   user: User = new User();
   room: Room = new Room();
+
   stompSubscription: Subscription;
   public connected: boolean = false;
+  public delete: boolean = false;
   public stompClient = null;
   ChatMessageType = ChatMessageType;
   @ViewChild('scroll') private myScrollContainer: ElementRef;
 
 
-  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService, private route : Router) { }
+  constructor(private urlPath: UrlPath, private userService: UserService, private roomService: RoomService, private route : Router, private messageService : MessageService) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -42,6 +46,7 @@ export class ChatPageComponent implements OnInit {
   ngOnInit() {
     if(localStorage.getItem("username")){
       this.username = localStorage.getItem("username");
+      this.role = localStorage.getItem("role");
       this.topic = '/topic/public';
       this.getRoom("public");
     }
@@ -134,7 +139,7 @@ export class ChatPageComponent implements OnInit {
 
 
   sendMessage(content: string) {
-
+    console.log("MESSAGGI ", this.messaggi);
     //Controllo se esiste la connessione e il messaggio
     if (content && this.stompClient) {
 
@@ -175,6 +180,26 @@ export class ChatPageComponent implements OnInit {
       chatMessage.content = '';
       this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
     this.getRoom(titleTopic);
+  }
+
+  clickDelete(messaggio : ChatMessage){
+    if(messaggio.type == ChatMessageType.CHAT && localStorage.getItem("role") == 'ADMIN'){
+      if(this.delete){
+        this.delete = false;
+      }
+      else this.delete = true;
+      this.messageService.eliminaMessaggio(messaggio.id).subscribe(
+        data => {
+          this.oldMessaggi = this.oldMessaggi.filter( mex => mex.id != messaggio.id);
+          this.messaggi = this.messaggi.filter( mex => mex.id != messaggio.id);
+          console.log(data);
+          console.log("MESSAGGI ", this.messaggi);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+    }
   }
 
   scrollToBottom(): void {

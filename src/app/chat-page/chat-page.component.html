@@ -7,39 +7,43 @@
     </div>
     <ul #scroll class="messageArea">
         <li *ngFor="let messaggio of oldMessaggi">
-            <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
-                <i [ngStyle]="applyStyle(messaggio.sender.username)" class="circle">
-                    <span style="color: white">{{messaggio.sender.username | slice:0:1 }}</span>
-                </i>
-                <div class="message-content">
-                    <b>{{messaggio.sender.username}}</b>
+            <div [ngClass]="{'admin': role=='ADMIN' && messaggio.content != '' }" (click)="clickDelete(messaggio)">
+                <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
+                    <i [ngStyle]="applyStyle(messaggio.sender.username)" class="circle">
+                        <span style="color: white">{{messaggio.sender.username | slice:0:1 }}</span>
+                    </i>
+                    <div class="message-content">
+                        <b>{{messaggio.sender.username}}</b>
+                        <p>{{messaggio.content}}</p>
+                    </div>
+                    <div class="message-content-time">
+                        <p class="text-time">{{messaggio.sendTime | date: 'dd/MM/yyyy  HH:mm'}}</p>
+                    </div>
+                </div>
+                <div *ngIf="messaggio.type == ChatMessageType.JOIN || messaggio.type == ChatMessageType.LEAVE"
+                    class="event-message">
                     <p>{{messaggio.content}}</p>
                 </div>
-                <div class="message-content-time">
-                    <p class="text-time">{{messaggio.sendTime | date: 'dd/MM/yyyy  HH:mm'}}</p>
-                </div>
-            </div>
-            <div *ngIf="messaggio.type == ChatMessageType.JOIN || messaggio.type == ChatMessageType.LEAVE"
-                class="event-message">
-                <p>{{messaggio.content}}</p>
             </div>
         </li>
         <li *ngFor="let messaggio of messaggi">
-            <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
-                <i [ngStyle]="applyStyle(messaggio.sender.username)" class="circle">
-                    <span style="color: white">{{messaggio.sender.username | slice:0:1 }}</span>
-                </i>
-                <div class="message-content">
-                    <b>{{messaggio.sender.username}}</b>
+            <div [ngClass]="{'admin': (role =='ADMIN' && messaggio.type != ChatMessageType.JOIN) }" (click)="clickDelete(messaggio)">
+                <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
+                    <i [ngStyle]="applyStyle(messaggio.sender.username)" class="circle">
+                        <span style="color: white">{{messaggio.sender.username | slice:0:1 }}</span>
+                    </i>
+                    <div class="message-content">
+                        <b>{{messaggio.sender.username}}</b>
+                        <p>{{messaggio.content}}</p>
+                    </div>
+                    <div class="message-content-time">
+                        <p class="text-time">{{messaggio.sendTime | date: 'dd/MM/yyyy  HH:mm'}}</p>
+                    </div>
+                </div>
+                <div *ngIf="messaggio.type == ChatMessageType.JOIN || messaggio.type == ChatMessageType.LEAVE"
+                    class="event-message">
                     <p>{{messaggio.content}}</p>
                 </div>
-                <div class="message-content-time">
-                    <p class="text-time">{{messaggio.sendTime | date: 'dd/MM/yyyy  HH:mm'}}</p>
-                </div>
-            </div>
-            <div *ngIf="messaggio.type == ChatMessageType.JOIN || messaggio.type == ChatMessageType.LEAVE"
-                class="event-message">
-                <p>{{messaggio.content}}</p>
             </div>
         </li>
     </ul>
