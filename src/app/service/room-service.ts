@@ -4,7 +4,7 @@ import { UrlPath } from '../app.costants';
 import { User } from '../dto/User';
 import { Observable } from 'rxjs';
 import { Room } from '../dto/Room';
-import { ChatMessage } from '../dto/ChatMessage';
+import { ForwardChatMessage } from '../dto/ChatMessage';
 
 @Injectable({
     providedIn: 'root'
@@ -23,10 +23,10 @@ export class RoomService {
         return this.http.get<Array<Room>>(this.urlPath.roomPath + "/?params=" + params, { headers: headers });
     }
 
-    public getMessages(roomId: string, messageExaple: ChatMessage): Observable<Array<ChatMessage>> {
+    public getMessages(roomId: string, messageExaple: ForwardChatMessage): Observable<Array<ForwardChatMessage>> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const params = encodeURIComponent(JSON.stringify(messageExaple));
-        return this.http.get<Array<ChatMessage>>(this.urlPath.messageRoomPath.replace("${roomId}", roomId) + "/?params=" + params, { headers: headers });
+        return this.http.get<Array<ForwardChatMessage>>(this.urlPath.messageRoomPath.replace("${roomId}", roomId) + "/?params=" + params, { headers: headers });
     }
 
 }

@@ -1,4 +1,4 @@
-<div class="chat-container">
+<div *ngIf="room" class="chat-container">
     <div class="chat-header">
         <h2>Spring WebSocket Chat Demo</h2>
         <div>
@@ -10,11 +10,11 @@
             <div [ngClass]="{'admin': (user.role =='ADMIN' && messaggio.type != ChatMessageType.JOIN) }"
                 (click)="clickDelete(messaggio)">
                 <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
-                    <i [ngStyle]="applyStyle(messaggio.sender.username)" class="circle">
-                        <span style="color: white">{{messaggio.sender.username | slice:0:1 }}</span>
+                    <i [ngStyle]="applyStyle(messaggio.senderUsername)" class="circle">
+                        <span style="color: white">{{messaggio.senderUsername | slice:0:1 }}</span>
                     </i>
                     <div class="message-content">
-                        <b>{{messaggio.sender.username}}</b>
+                        <b>{{messaggio.senderUsername}}</b>
                         <p>{{messaggio.content}}</p>
                     </div>
                     <div class="message-content-time">
@@ -37,13 +37,17 @@
             </div>
         </div>
     </form>
-    <div class="room-container-title">
-        <h2>Rooms</h2>
-        <hr>
-    </div>
-    <div class="room-container">
-        <button class="room-button" (click)="changeRoom('public')">Public</button>
-        <button class="room-button" (click)="changeRoom('sport')">Sport</button>
-        <button class="room-button" (click)="changeRoom('lavoro')">Lavoro</button>
+</div>
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="room-container-title">
+            <h2>Rooms</h2>
+            <hr>
+        </div>
+        <div class="room-container">
+            <button class="room-button" (click)="changeRoom('public')">Public</button>
+            <button class="room-button" (click)="changeRoom('sport')">Sport</button>
+            <button class="room-button" (click)="changeRoom('lavoro')">Lavoro</button>
+        </div>
     </div>
 </div>
