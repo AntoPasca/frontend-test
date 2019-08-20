@@ -1,4 +1,4 @@
-<div *ngIf="room" class="chat-container">
+<div *ngIf="this.selectedRooms.length > 0" class="chat-container">
     <div class="chat-header">
         <h2>Spring WebSocket Chat Demo</h2>
         <div>
@@ -45,16 +45,14 @@
             <hr>
         </div>
         <div class="room-container">
-            <mat-chip-list>
-                <mat-chip (click)="changeRoom('public')">Public</mat-chip>
-                <mat-chip (click)="changeRoom('sport')">Sport</mat-chip>
-                <mat-chip (click)="changeRoom('lavoro')">Lavoro</mat-chip>
+            <mat-chip-list [(ngModel)]="selectedRooms">
+                <mat-chip selectable="true" [selected]="isSelected('public')" (click)="changeRoom('public')">Public
+                </mat-chip>
+                <mat-chip selectable="true" [selected]="isSelected('sport')" (click)="changeRoom('sport')">Sport
+                </mat-chip>
+                <mat-chip selectable="true" [selected]="isSelected('lavoro')" (click)="changeRoom('lavoro')">Lavoro
+                </mat-chip>
             </mat-chip-list>
         </div>
     </div>
-</div>
-
-<div>
-
-
 </div>

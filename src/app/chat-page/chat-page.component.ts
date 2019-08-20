@@ -77,6 +77,17 @@ export class ChatPageComponent implements OnInit {
 
 
   changeRoom(titleTopic: string) {
+    if (this.selectedRooms === null || this.selectedRooms.length === 0) { // seleziona una stanza
+      this.selectedRoom = titleTopic;
+      this.selectedRooms.push(this.selectedRoom);
+    } else if (this.selectedRooms.length >= 1 && this.selectedRoom === titleTopic) { // deseleziona stanza 
+      this.selectedRoom = null;
+      this.selectedRooms.splice(0, 1);
+    } else if (this.selectedRooms.length >= 1 && this.selectedRoom !== titleTopic) { // seleziona un'altra stanza diversa da quella già selezionata
+      this.selectedRoom = titleTopic;
+      this.selectedRooms.splice(0, 1);
+      this.selectedRooms.push(this.selectedRoom);
+    }
 
     // cancella sottoscrizione a room corrente
     if (this.topicSubscription) {
@@ -143,5 +154,21 @@ export class ChatPageComponent implements OnInit {
     if (this.topicSubscription) {
       this.topicSubscription.unsubscribe();
     }
+  }
+
+  // for seletion of rooms
+  selectable = true;
+  rooms = [
+    { name: 'public' },
+    { name: 'sport' },
+    { name: 'lavoro' }
+  ];
+
+  selectedRooms: any[] = [];
+  selectedRoom;
+
+  isSelected(room: any): boolean {
+    const index = this.selectedRooms.indexOf(room);
+    return index >= 0;
   }
 }
