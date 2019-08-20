@@ -10,6 +10,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { RouterModule } from '@angular/router';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { RegisterPageComponent } from './register-page/register-page.component';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(AppRoutes)
+    RouterModule.forRoot(AppRoutes),
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [UrlPath],
   bootstrap: [AppComponent]

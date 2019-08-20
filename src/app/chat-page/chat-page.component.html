@@ -45,9 +45,16 @@
             <hr>
         </div>
         <div class="room-container">
-            <button class="room-button" (click)="changeRoom('public')">Public</button>
-            <button class="room-button" (click)="changeRoom('sport')">Sport</button>
-            <button class="room-button" (click)="changeRoom('lavoro')">Lavoro</button>
+            <mat-chip-list>
+                <mat-chip (click)="changeRoom('public')">Public</mat-chip>
+                <mat-chip (click)="changeRoom('sport')">Sport</mat-chip>
+                <mat-chip (click)="changeRoom('lavoro')">Lavoro</mat-chip>
+            </mat-chip-list>
         </div>
     </div>
+</div>
+
+<div>
+
+
 </div>
