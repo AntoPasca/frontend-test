@@ -80,31 +80,40 @@ export class ChatPageComponent implements OnInit {
     if (this.selectedRooms === null || this.selectedRooms.length === 0) { // seleziona una stanza
       this.selectedRoom = titleTopic;
       this.selectedRooms.push(this.selectedRoom);
+      this.activateRoom();
     } else if (this.selectedRooms.length >= 1 && this.selectedRoom === titleTopic) { // deseleziona stanza 
+      this.deactivateRoom();
       this.selectedRoom = null;
       this.selectedRooms.splice(0, 1);
     } else if (this.selectedRooms.length >= 1 && this.selectedRoom !== titleTopic) { // seleziona un'altra stanza diversa da quella già selezionata
+      this.deactivateRoom();
       this.selectedRoom = titleTopic;
       this.selectedRooms.splice(0, 1);
       this.selectedRooms.push(this.selectedRoom);
+      this.activateRoom();
     }
+  }
 
-    // cancella sottoscrizione a room corrente
-    if (this.topicSubscription) {
-      this.topicSubscription.unsubscribe();
-    }
-    // invio messaggio di leave
-    if (this.user && this.room) {
-      this.stompClient.send("/app/chat.leave", {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
-    }
-    this.topic = '/topic/'.concat(titleTopic);
+  activateRoom() {
+    this.topic = '/topic/'.concat(this.selectedRoom);
     let room = new Room();
-    room.title = titleTopic;
+    room.title = this.selectedRoom;
     // recupera info stanza 
     this.roomService.getStanza(room).subscribe(room => {
       this.room = room[0];
       this.connectToRoom();
     }, err => console.log("errore recupero info stanza", err));
+  }
+
+  deactivateRoom() {
+    // cancella sottoscrizione a room corrente
+    if (this.topicSubscription) {
+      this.topicSubscription.unsubscribe();
+    }
+    // invio messaggio di leave
+    if (this.room != null && this.user != null) {
+      this.stompClient.send("/app/chat.leave", {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
+    }
   }
 
   connectToRoom() {
@@ -117,7 +126,9 @@ export class ChatPageComponent implements OnInit {
     });
 
     //Invio messaggio di join 
-    this.stompClient.send('/app/chat.join', {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
+    if (this.room != null && this.user != null) {
+      this.stompClient.send('/app/chat.join', {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
+    }
   }
 
 
