@@ -6,6 +6,7 @@ import { RoomService } from '../service/room-service';
 import { Room } from '../dto/Room';
 import { ChatMessageType } from '../enum/ChatMessageType';
 import { LoginService } from '../service/login.service';
+import { MessageService } from '../service/message-service';
 
 @Component({
   selector: 'app-chat-page',
@@ -32,7 +33,8 @@ export class ChatPageComponent implements OnInit {
 
   constructor(
     private roomService: RoomService,
-    private loginService: LoginService) { }
+    private loginService: LoginService,
+    private messageService: MessageService) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -118,11 +120,22 @@ export class ChatPageComponent implements OnInit {
 
   connectToRoom() {
     this.messaggi = [];
+
+    // recupera messaggi precedenti
+    let msgSubscription = this.messageService.getMessaggi(this.user.id, this.room.id).subscribe(messaggi => {
+      this.messaggi = messaggi;
+      console.log("messaggiGet", this.messaggi);
+    }, err => alert("errore recupero messaggi"), () => {
+      msgSubscription.unsubscribe();
+    });
+
+
     // incoming messages
     this.topicSubscription = this.stompClient.subscribe(this.topic, (payload) => {
       let message = new IncomingChatMessage();
       message = JSON.parse(payload.body);
       this.messaggi.push(message);
+      console.log("messaggi", this.messaggi);
     });
 
     //Invio messaggio di join 
