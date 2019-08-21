@@ -124,24 +124,25 @@ export class ChatPageComponent implements OnInit {
     // recupera messaggi precedenti
     let msgSubscription = this.messageService.getMessaggi(this.user.id, this.room.id).subscribe(messaggi => {
       this.messaggi = messaggi;
-      console.log("messaggiGet", this.messaggi);
+
+      // incoming messages
+      this.topicSubscription = this.stompClient.subscribe(this.topic, (payload) => {
+        let message = new IncomingChatMessage();
+        message = JSON.parse(payload.body);
+        this.messaggi.push(message);
+      });
+
+      //Invio messaggio di join 
+      if (this.room != null && this.user != null) {
+        this.stompClient.send('/app/chat.join', {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
+      }
+
     }, err => alert("errore recupero messaggi"), () => {
       msgSubscription.unsubscribe();
     });
 
 
-    // incoming messages
-    this.topicSubscription = this.stompClient.subscribe(this.topic, (payload) => {
-      let message = new IncomingChatMessage();
-      message = JSON.parse(payload.body);
-      this.messaggi.push(message);
-      console.log("messaggi", this.messaggi);
-    });
 
-    //Invio messaggio di join 
-    if (this.room != null && this.user != null) {
-      this.stompClient.send('/app/chat.join', {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
-    }
   }
 
 
