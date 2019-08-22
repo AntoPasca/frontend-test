@@ -4,7 +4,6 @@ import { RoomService } from '../service/room-service';
 import { LoginService } from '../service/login.service';
 import { User } from '../dto/User';
 import * as Stomp from '@stomp/stompjs';
-import { MessageService } from '../service/message-service';
 
 @Component({
   selector: 'app-chat-room',
@@ -13,24 +12,25 @@ import { MessageService } from '../service/message-service';
 })
 export class ChatRoomComponent implements OnInit {
 
-  // for seletion of rooms
-  rooms = [
-    { name: 'public' },
-    { name: 'sport' },
-    { name: 'lavoro' }
-  ];
+
 
   selectedRooms: any[] = [];
   selectedRoom;
-  room: Room;
+  room: Room;     // stanza selezionata - emette eventi per chat-page component
+  rooms: Room[];  // stanze totali sul db
   user: User;
   stompClient: Stomp.Client = null;
+  chipList;
 
-  constructor(private roomService: RoomService, private loginService: LoginService, private messageService: MessageService) { }
+  constructor(private roomService: RoomService, private loginService: LoginService) { }
 
   ngOnInit() {
     this.stompClient = this.loginService.stompClient;
     this.user = this.loginService.getConnectedUser();
+    // recupera tutte le stanze
+    this.roomService.getStanza(new Room()).subscribe(stanze => {
+      this.rooms = stanze;
+    })
   }
 
 
