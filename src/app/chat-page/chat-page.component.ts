@@ -41,12 +41,8 @@ export class ChatPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.stompClient = this.loginService.stompClient;
     this.user = this.loginService.getConnectedUser();
-    this.loginService.connectApplication(this.user.id).subscribe(isConnected => {
-      if (this.loginService.stompClient.connected) {
-        this.stompClient = this.loginService.stompClient;
-      }
-    });
   }
 
   sendMessage(content: string) {

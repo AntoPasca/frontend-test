@@ -30,14 +30,14 @@ export class LoginService {
     return this.loggedIn.asObservable();
   }
 
-  public connectApplication(userId: string): Subject<boolean> {
+  public connectApplication(userId: string): Promise<boolean> {
     const socket = new SockJS(this.urlPath.webSocketChatUrl);
     this.stompClient = Stomp.over(socket);
-    this.stompClient.connect({ userId: userId }, () => {
-      this.isConnected.next(true);
-    }, () => console.log("stomp client error")
-    );
-    return this.isConnected;
+    return new Promise((resolve) => {
+      this.stompClient.connect({ userId: userId }, () => {
+        resolve();
+      });
+    });
   }
 
   public disconnectApplication() {

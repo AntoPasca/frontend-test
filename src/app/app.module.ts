@@ -12,13 +12,15 @@ import { ChatPageComponent } from './chat-page/chat-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
+import { ChatUserComponent } from './chat-user/chat-user.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     ChatPageComponent,
-    RegisterPageComponent
+    RegisterPageComponent,
+    ChatUserComponent
   ],
   imports: [
     BrowserModule,
