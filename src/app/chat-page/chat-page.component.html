@@ -1,14 +1,13 @@
-<div *ngIf="this.selectedRooms.length > 0" class="chat-container">
+<div *ngIf="this.room" class="chat-container">
     <div class="chat-header">
         <h2>Spring WebSocket Chat Demo</h2>
         <div>
-            connected as <b>{{user.username}}</b> at room <b>{{selectedRoom}}</b>
+            connected as <b>{{user.username}}</b> at room <b>{{this.room.title}}</b>
         </div>
     </div>
     <ul #scroll class="messageArea">
         <li *ngFor="let messaggio of messaggi">
-            <div [ngClass]="{'admin': (user.role =='ADMIN' && messaggio.type != ChatMessageType.JOIN) }"
-                (click)="clickDelete(messaggio)">
+            <div [ngClass]="{'admin': (user.role =='ADMIN' && messaggio.type != ChatMessageType.JOIN) }">
                 <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
                     <i [ngStyle]="applyStyle(messaggio.senderUsername)" class="circle">
                         <span style="color: white">{{messaggio.senderUsername | slice:0:1 }}</span>
@@ -38,25 +37,3 @@
         </div>
     </form>
 </div>
-<div class="chat-container">
-    <div class="chat-header">
-        <div class="room-container-title">
-            <h2>Rooms</h2>
-            <hr>
-        </div>
-        <div class="room-container">
-            <mat-chip-list [(ngModel)]="selectedRooms">
-                <mat-chip selectable="true" [selected]="isSelected('public')" (click)="changeRoom('public')">Public
-                </mat-chip>
-                <mat-chip selectable="true" [selected]="isSelected('sport')" (click)="changeRoom('sport')">Sport
-                </mat-chip>
-                <mat-chip selectable="true" [selected]="isSelected('lavoro')" (click)="changeRoom('lavoro')">Lavoro
-                </mat-chip>
-            </mat-chip-list>
-        </div>
-    </div>
-</div>
-
-<mat-divider></mat-divider>
-
-<app-chat-user></app-chat-user>

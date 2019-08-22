@@ -1,8 +1,7 @@
 import { ForwardChatMessage, IncomingChatMessage } from '../dto/ChatMessage';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
 import * as Stomp from '@stomp/stompjs';
 import { User } from '../dto/User';
-import { RoomService } from '../service/room-service';
 import { Room } from '../dto/Room';
 import { ChatMessageType } from '../enum/ChatMessageType';
 import { LoginService } from '../service/login.service';
@@ -22,7 +21,23 @@ export class ChatPageComponent implements OnInit {
   messaggi: IncomingChatMessage[] = [];
   topic: string;
   user: User;
-  room: Room;
+
+  @Input() room: Room;
+
+  ngOnChanges(simpleChanges: SimpleChanges) {
+    // sottoscriviti a una nuova stanza
+    if (simpleChanges.room.currentValue) {
+      this.loadAndListenMessagesFrom();
+    } else {
+      // invio messaggio di leave nella stanza precedente se c'è.
+      if (simpleChanges.room.previousValue && this.user != null) {
+        this.stompClient.send("/app/chat.leave", {}, JSON.stringify({ 'userID': this.user.id, 'roomID': simpleChanges.room.previousValue.id }));
+      }
+      if (this.topicSubscription) {
+        this.topicSubscription.unsubscribe();
+      }
+    }
+  }
 
   public delete: boolean = false;
   public stompClient: Stomp.Client = null;
@@ -32,7 +47,6 @@ export class ChatPageComponent implements OnInit {
 
 
   constructor(
-    private roomService: RoomService,
     private loginService: LoginService,
     private messageService: MessageService) { }
 
@@ -73,48 +87,7 @@ export class ChatPageComponent implements OnInit {
     return styles;
   }
 
-
-  changeRoom(titleTopic: string) {
-    if (this.selectedRooms === null || this.selectedRooms.length === 0) { // seleziona una stanza
-      this.selectedRoom = titleTopic;
-      this.selectedRooms.push(this.selectedRoom);
-      this.activateRoom();
-    } else if (this.selectedRooms.length >= 1 && this.selectedRoom === titleTopic) { // deseleziona stanza 
-      this.deactivateRoom();
-      this.selectedRoom = null;
-      this.selectedRooms.splice(0, 1);
-    } else if (this.selectedRooms.length >= 1 && this.selectedRoom !== titleTopic) { // seleziona un'altra stanza diversa da quella già selezionata
-      this.deactivateRoom();
-      this.selectedRoom = titleTopic;
-      this.selectedRooms.splice(0, 1);
-      this.selectedRooms.push(this.selectedRoom);
-      this.activateRoom();
-    }
-  }
-
-  activateRoom() {
-    this.topic = '/topic/'.concat(this.selectedRoom);
-    let room = new Room();
-    room.title = this.selectedRoom;
-    // recupera info stanza 
-    this.roomService.getStanza(room).subscribe(room => {
-      this.room = room[0];
-      this.connectToRoom();
-    }, err => console.log("errore recupero info stanza", err));
-  }
-
-  deactivateRoom() {
-    // cancella sottoscrizione a room corrente
-    if (this.topicSubscription) {
-      this.topicSubscription.unsubscribe();
-    }
-    // invio messaggio di leave
-    if (this.room != null && this.user != null) {
-      this.stompClient.send("/app/chat.leave", {}, JSON.stringify({ 'userID': this.user.id, 'roomID': this.room.id }));
-    }
-  }
-
-  connectToRoom() {
+  loadAndListenMessagesFrom() {
     this.messaggi = [];
 
     // recupera messaggi precedenti
@@ -122,7 +95,8 @@ export class ChatPageComponent implements OnInit {
       this.messaggi = messaggi;
 
       // incoming messages
-      this.topicSubscription = this.stompClient.subscribe(this.topic, (payload) => {
+      const topic = "/topic/".concat(this.room.title);
+      this.topicSubscription = this.stompClient.subscribe(topic, (payload) => {
         let message = new IncomingChatMessage();
         message = JSON.parse(payload.body);
         this.messaggi.push(message);
@@ -136,30 +110,6 @@ export class ChatPageComponent implements OnInit {
     }, err => alert("errore recupero messaggi"), () => {
       msgSubscription.unsubscribe();
     });
-
-
-
-  }
-
-
-  clickDelete(messaggio: ForwardChatMessage) {
-    // if (messaggio.type == ChatMessageType.CHAT && localStorage.getItem("role") == 'ADMIN') {
-    //   if (this.delete) {
-    //     this.delete = false;
-    //   }
-    //   else this.delete = true;
-    //   this.messageService.eliminaMessaggio(messaggio.id).subscribe(
-    //     data => {
-    //       this.oldMessaggi = this.oldMessaggi.filter(mex => mex.id != messaggio.id);
-    //       this.messaggi = this.messaggi.filter(mex => mex.id != messaggio.id);
-    //       console.log(data);
-    //       console.log("MESSAGGI ", this.messaggi);
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   )
-    // }
   }
 
   scrollToBottom(): void {
@@ -169,27 +119,7 @@ export class ChatPageComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    // logout 
+    // TODO: implementare il logout 
     this.loginService.disconnectApplication();
-    // room disconnection
-    if (this.topicSubscription) {
-      this.topicSubscription.unsubscribe();
-    }
-  }
-
-  // for seletion of rooms
-  selectable = true;
-  rooms = [
-    { name: 'public' },
-    { name: 'sport' },
-    { name: 'lavoro' }
-  ];
-
-  selectedRooms: any[] = [];
-  selectedRoom;
-
-  isSelected(room: any): boolean {
-    const index = this.selectedRooms.indexOf(room);
-    return index >= 0;
   }
 }

@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef> USERNAME </th>
@@ -26,7 +26,20 @@
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
   </table>
+</div> -->
+
+<div style="text-align: center">
+  UTENTI CONNESSI
 </div>
+<mat-list>
+  <mat-list-item *ngFor="let utente of utenti">
+
+    <mat-icon matListIcon *ngIf="utente.isOnline" class="dot"> </mat-icon>
+    <h3 matLine> {{utente.username}} </h3>
+    <p matLine>
+      <p class="text-time"> {{utente.lastAccess | date: 'dd/MM/yyyy  HH:mm'}} </p>
+  </mat-list-item>
+</mat-list>
 
 
 

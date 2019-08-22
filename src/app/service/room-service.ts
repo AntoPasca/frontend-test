@@ -4,7 +4,7 @@ import { UrlPath } from '../app.costants';
 import { User } from '../dto/User';
 import { Observable } from 'rxjs';
 import { Room } from '../dto/Room';
-import { ForwardChatMessage } from '../dto/ChatMessage';
+import { ForwardChatMessage, IncomingChatMessage } from '../dto/ChatMessage';
 
 @Injectable({
     providedIn: 'root'
@@ -28,5 +28,4 @@ export class RoomService {
         const params = encodeURIComponent(JSON.stringify(messageExaple));
         return this.http.get<Array<ForwardChatMessage>>(this.urlPath.messageRoomPath.replace("${roomId}", roomId) + "/?params=" + params, { headers: headers });
     }
-
 }

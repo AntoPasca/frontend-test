@@ -13,6 +13,8 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { ChatUserComponent } from './chat-user/chat-user.component';
+import { ChatRoomComponent } from './chat-room/chat-room.component';
+import { ChatContainerComponent } from './chat-container/chat-container.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ChatUserComponent } from './chat-user/chat-user.component';
     LoginPageComponent,
     ChatPageComponent,
     RegisterPageComponent,
-    ChatUserComponent
+    ChatUserComponent,
+    ChatRoomComponent,
+    ChatContainerComponent
   ],
   imports: [
     BrowserModule,

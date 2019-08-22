@@ -1,0 +1,7 @@
+<div>
+  <mat-chip-list class="mat-chip-list-stacked" aria-orientation="vertical" [(ngModel)]="selectedRooms">
+    <mat-chip selectable="true" [selected]="isSelected('public')" (click)="changeRoom('public')">Public</mat-chip>
+    <mat-chip selectable="true" [selected]="isSelected('sport')" (click)="changeRoom('sport')">Sport</mat-chip>
+    <mat-chip selectable="true" [selected]="isSelected('lavoro')" (click)="changeRoom('lavoro')">Lavoro</mat-chip>
+  </mat-chip-list>
+</div>
