@@ -5,24 +5,29 @@
     <br>
     <br>
     <div *ngIf="errusr" class="alert alert-danger" role="alert">
-        Accesso fallito!
+      Accesso fallito!
     </div>
     <div *ngIf="errpsw" class="alert alert-warning" role="alert">
-        Password errata!
+      Password errata!
+    </div>
+    <div *ngIf="errlogin" class="alert alert-warning" role="alert">
+      Utente già loggato!
     </div>
     <form>
       <div class="form-group">
-        <input type="text" name="username" id="username" placeholder="Username" autocomplete="off" class="form-control" [(ngModel)]="username" />
+        <input type="text" name="username" id="username" placeholder="Username" autocomplete="off" class="form-control"
+          [(ngModel)]="username" />
       </div>
       <div class="form-group">
-        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off" class="form-control" [(ngModel)]="password" />
+        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off"
+          class="form-control" [(ngModel)]="password" />
       </div>
       <div class="form-group">
-        <button type="submit" style = "width: 40%;" (click)="login()" class="btn btn-primary">Login</button>
+        <button type="submit" style="width: 40%;" (click)="login()" class="btn btn-primary">Login</button>
       </div>
     </form>
-      <div class="form-group">
-        <button type="submit" (click)="register()"class="btn btn-secondary btn-sm">Registra</button>
-      </div>
+    <div class="form-group">
+      <button type="submit" (click)="register()" class="btn btn-secondary btn-sm">Registra</button>
+    </div>
   </div>
 </div>

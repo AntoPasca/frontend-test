@@ -15,6 +15,7 @@ export class LoginPageComponent implements OnInit {
   password: string = '';
   errusr = false;
   errpsw = false;
+  errlogin = false;
 
   constructor(private router: Router, private userService: UserService, private loginService: LoginService) { }
 
@@ -34,7 +35,10 @@ export class LoginPageComponent implements OnInit {
         console.log(data);
         this.loginService.setConnectedUser(data);
         this.loginService.setLoggedIn(true);
-        this.router.navigate(['/chat']);
+        // connect ws
+        this.loginService.connectApplication(data.id).then(resolve => {
+          this.router.navigate(['/chat']);
+        })
       },
       err => {
         if (err.error.message == 'ERRUSR') {
@@ -42,6 +46,8 @@ export class LoginPageComponent implements OnInit {
         }
         else if (err.error.message == 'ERRPSW') {
           this.errpsw = true;
+        } else if (err.error.message == "ERRLOGIN") {
+          this.errlogin = true;
         }
       }
     )

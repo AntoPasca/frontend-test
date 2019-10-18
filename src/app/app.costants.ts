@@ -10,7 +10,7 @@ export class UrlPath {
     public registraUtente = this.userPath;
     public loginUtente = this.userPath.concat("login/");
     public eliminaMessaggio = this.basePath.concat("${messageId}");
-
+    public messaggio = this.basePath.concat("messaggio");
 
     // room 
     public roomPath = this.basePath.concat("stanza/");
