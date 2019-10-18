@@ -1,0 +1,52 @@
+<!-- <div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef> USERNAME </th>
+      <td mat-cell *matCellDef="let user">
+        <i [ngStyle]="applyStyle(user.username)" class="circle">
+          <span style="color: white">{{user.username | slice:0:1 }}</span>
+        </i>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isOnline">
+      <th mat-header-cell *matHeaderCellDef> ONLINE </th>
+      <td mat-cell *matCellDef="let user"> <span *ngIf="user.isOnline" class="dot"></span> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastAccess">
+      <th mat-header-cell *matHeaderCellDef> ULTIMO ACCESSO </th>
+      <td mat-cell *matCellDef="let user">
+        <div class="message-content-time">
+          <p *ngIf="!user.isOnline" class="text-time">{{user.lastAccess | date: 'dd/MM/yyyy  HH:mm'}}</p>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+  </table>
+</div> -->
+
+<div style="text-align: center">
+  UTENTI CONNESSI
+</div>
+<mat-list>
+  <mat-list-item *ngFor="let utente of utenti">
+
+    <mat-icon matListIcon *ngIf="utente.isOnline" class="dot"> </mat-icon>
+    <h3 matLine> {{utente.username}} </h3>
+    <p matLine>
+      <p class="text-time"> {{utente.lastAccess | date: 'dd/MM/yyyy  HH:mm'}} </p>
+  </mat-list-item>
+</mat-list>
+
+
+
+
+<!-- 
+        <div class="message-content">
+            <b>{{user.nome}}</b>
+            <p>{{user.cognome}}</p>
+        </div>
+        -->

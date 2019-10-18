@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files  */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -12,7 +14,7 @@
 
 html,body {
     height: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 body {
@@ -30,7 +32,7 @@ body {
 body:before {
     height: 50%;
     width: 100%;
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     left: 0;
     background: #128ff2;
@@ -303,6 +305,21 @@ button.accent {
     width: 100%;
 }
 
+.admin{
+    width: auto;
+    padding: 10px;
+    margin: -5px auto;
+}
+
+.admin:hover{
+    background-color: rgb(253, 198, 198);
+    border-radius: 20px;
+    content: 'DELETE';
+}
+.admin:hover .text-time{
+    color: #6b6b6b !important;
+}
+
 
 @media screen and (max-width: 730px) {
 
@@ -352,3 +369,9 @@ button.accent {
 
 
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Roboto', sans-serif; }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Roboto', sans-serif; }

@@ -1,0 +1,9 @@
+<div>
+  <mat-form-field>
+    <mat-chip-list #chipList class="mat-chip-list-stacked" aria-orientation="vertical" [(ngModel)]="selectedRooms">
+      <mat-chip *ngFor="let room of rooms" selectable="true" [selected]="isSelected(room.title)"
+        (click)="changeRoom(room.title)">{{room.title}}</mat-chip>
+    </mat-chip-list>
+    <input [matChipInputFor]="chipList">
+  </mat-form-field>
+</div>

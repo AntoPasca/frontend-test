@@ -1,0 +1,9 @@
+.header {
+    text-align: center;
+    padding: 40px;
+}
+
+.chat-page {
+    height: inherit !important;
+    width: 100% !important;
+  }
