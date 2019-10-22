@@ -1,6 +1,14 @@
 .header {
     text-align: center;
-    padding: 40px;
+    padding: 20px;
+    background-color: #128FF2;
+    font-family: myFirstFont;
+    font-size: 3em;
+    color: white;
+}
+
+.mat-figure{
+    display: inline;
 }
 
 .chat-page {

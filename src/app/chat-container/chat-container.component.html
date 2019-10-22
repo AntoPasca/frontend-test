@@ -1,10 +1,10 @@
 <div>
   <p class="header">WELCOME TO CHATAPP</p>
   <mat-grid-list [cols]="12" rowHeight="700px">
-    <mat-grid-tile [colspan]="3">
+    <mat-grid-tile [colspan]="2">
       <app-chat-room #room></app-chat-room>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="6">
+    <mat-grid-tile [colspan]="7">
       <app-chat-page class="chat-page" [room]="room.room"></app-chat-page>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="3">
