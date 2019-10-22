@@ -1,20 +1,47 @@
- 
-  .dot {
-    height: 1px !important;
-    width: 1px !important;
-    background-color: darkgreen;
-    border-radius: 50%;
-    display: inline-block;
+ .dot {
+   height: 1px !important;
+   width: 1px !important;
+   background-color: darkgreen;
+   border-radius: 50%;
+   display: inline-block;
+ }
 
-  }
+ .dotOffline {
+   height: 1px !important;
+   width: 1px !important;
+   background-color: lightgray;
+   border-radius: 50%;
+   display: inline-block;
+ }
 
+ .userListTitle {
+   background-color: #128FF2;
+   font-family: myFirstFont;
+   border: 1px solid #128ff2;
+   border-radius: 20px;
+   text-align: center;
+   color: white;
+ }
 
-  .text-time{
-    color: #b9b9b9 !important;
-    font-size: small;
-    text-align: right;
+ .userList {
+   overflow-y: scroll;
+   width: 20em;
+   height: 28em;
+   border: solid 1px #128ff2;
+   border-radius: 20px;
+   background-color: white;
+ }
+
+ .userList::-webkit-scrollbar {
+   display: none;
+ }
+
+ .text-time {
+   color: #b9b9b9 !important;
+   font-size: small;
+   text-align: right;
  }
 
  .mat-list {
-  width: 100%;
+   width: 100%;
  }
