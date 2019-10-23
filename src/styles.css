@@ -162,7 +162,9 @@ button.accent {
     max-height: 550px !important;
     position: relative;
     border-radius: 10px;
+    border: 1px solid #128ff2;
 }
+
 
 .room-container-title {
     max-width: 700px;
@@ -199,6 +201,10 @@ button.accent {
     height: calc(100% - 150px);
     max-height: 400px;
 }
+
+.chat-container ul::-webkit-scrollbar {
+    display: none;
+  }
 
 .chat-container #messageForm {
     padding: 10px;
