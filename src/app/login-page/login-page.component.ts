@@ -3,6 +3,10 @@ import { User } from './../dto/User';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login.service';
+import { Link, Node } from '../d3/models';
+import CONFIG from '../app.config';
+
+
 
 @Component({
   selector: 'app-login-page',
@@ -17,7 +21,29 @@ export class LoginPageComponent implements OnInit {
   errpsw = false;
   errlogin = false;
 
-  constructor(private router: Router, private userService: UserService, private loginService: LoginService) { }
+  nodes: Node[] = [];
+  links: Link[] = [];
+
+  constructor(private router: Router, private userService: UserService, private loginService: LoginService) {
+    const N = CONFIG.N,
+      getIndex = number => number - 1;
+
+    /** constructing the nodes array */
+    for (let i = 1; i <= N; i++) {
+      this.nodes.push(new Node(i));
+    }
+
+    for (let i = 1; i <= N; i++) {
+      for (let m = 2; i * m <= N; m++) {
+        /** increasing connections toll on connecting nodes */
+        this.nodes[getIndex(i)].linkCount++;
+        this.nodes[getIndex(i * m)].linkCount++;
+
+        /** connecting the nodes before starting the simulation */
+        this.links.push(new Link(i, i * m));
+      }
+    }
+  }
 
   ngOnInit() {
     localStorage.removeItem("username");

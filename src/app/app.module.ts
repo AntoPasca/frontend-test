@@ -15,6 +15,9 @@ import { MaterialModule } from './material/material.module';
 import { ChatUserComponent } from './chat-user/chat-user.component';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { ChatContainerComponent } from './chat-container/chat-container.component';
+import { D3Service, D3_DIRECTIVES } from './d3';
+import { SHARED_VISUALS } from './shared';
+import { GraphComponent } from './graph/graph.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { ChatContainerComponent } from './chat-container/chat-container.componen
     RegisterPageComponent,
     ChatUserComponent,
     ChatRoomComponent,
-    ChatContainerComponent
+    ChatContainerComponent,
+    ...SHARED_VISUALS,
+    ...D3_DIRECTIVES,
+    GraphComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +41,7 @@ import { ChatContainerComponent } from './chat-container/chat-container.componen
     BrowserAnimationsModule,
     MaterialModule
   ],
-  providers: [UrlPath],
+  providers: [UrlPath , D3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
