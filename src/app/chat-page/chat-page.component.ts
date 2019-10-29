@@ -118,6 +118,19 @@ export class ChatPageComponent implements OnInit {
     } catch (err) { }
   }
 
+  deleteMessage(id: string) {
+    if (this.user.role == 'ADMIN' && id != null) {
+      this.messageService.eliminaMessaggio(id).subscribe(x => {
+        console.log("Messaggio eliminato id: ", id);
+        this.messaggi = this.messaggi.filter(mex => mex.id !== id);
+      }),
+        err => {
+          console.log(err);
+        }
+    }
+    return false;
+  }
+
   ngOnDestroy() {
     // TODO: implementare il logout 
     this.loginService.disconnectApplication();

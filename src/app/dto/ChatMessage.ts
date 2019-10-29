@@ -12,6 +12,7 @@ export class ForwardChatMessage {
 oggetto utilizzato per comunicazione da BE a FE. oggetto in entrata dagl'altri utenti.
 */
 export class IncomingChatMessage {
+    public id: string;
     public type: ChatMessageType;
     public content: string;
     public senderUsername: string;
