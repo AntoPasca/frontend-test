@@ -1,3 +1,4 @@
+import { LinkPage } from './../dto/LinkPage';
 import { ForwardChatMessage, IncomingChatMessage } from '../dto/ChatMessage';
 import { Component, OnInit, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
 import * as Stomp from '@stomp/stompjs';
@@ -116,6 +117,19 @@ export class ChatPageComponent implements OnInit {
     try {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
     } catch (err) { }
+  }
+
+  deleteMessage(id: string) {
+    if (this.user.role == 'ADMIN' && id != null) {
+      this.messageService.eliminaMessaggio(id).subscribe(x => {
+        console.log("Messaggio eliminato id: ", id);
+        this.messaggi = this.messaggi.filter(mex => mex.id !== id);
+      }),
+        err => {
+          console.log(err);
+        }
+    }
+    return false;
   }
 
   ngOnDestroy() {
