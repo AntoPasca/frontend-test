@@ -1,5 +1,6 @@
 import { Component, Input, ChangeDetectorRef, HostListener, ChangeDetectionStrategy, OnInit, AfterViewInit } from '@angular/core';
 import { ForceDirectedGraph, D3Service } from '../d3';
+import { AnotherGraph } from '../d3/models/another-graph';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { ForceDirectedGraph, D3Service } from '../d3';
 export class GraphComponent implements OnInit, AfterViewInit {
   @Input('nodes') nodes;
   @Input('links') links;
-  graph: ForceDirectedGraph;
+  graph: AnotherGraph;
   private _options: { width, height } = { width: 800, height: 600 };
 
   @HostListener('window:resize', ['$event'])
@@ -31,7 +32,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     /** Receiving an initialized simulated graph from our custom d3 service */
-    this.graph = this.d3Service.getForceDirectedGraph(this.nodes, this.links, this.options);
+    this.graph = this.d3Service.getCluster(this.nodes, this.links, this.options);
 
     /** Binding change detection check on each tick
      * This along with an onPush change detection strategy should enforce checking only when relevant!

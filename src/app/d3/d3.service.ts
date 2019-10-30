@@ -1,5 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Node, Link, ForceDirectedGraph } from './models';
+import { ForceDirectedGraph } from './models/force-directed-graph';
+import { AnotherGraph } from './models/another-graph';
+import { Link , Node } from './models';
 import * as d3 from 'd3';
 
 @Injectable()
@@ -63,6 +65,11 @@ export class D3Service {
   */
   getForceDirectedGraph(nodes: Node[], links: Link[], options: { width, height }) {
     const sg = new ForceDirectedGraph(nodes, links, options);
+    return sg;
+  }
+
+  getCluster(nodes: Node[], links: Link[], options: { width, height }) {
+    const sg = new AnotherGraph(nodes, links, options);
     return sg;
   }
 }

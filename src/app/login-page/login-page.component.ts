@@ -3,8 +3,8 @@ import { User } from './../dto/User';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login.service';
-import { Link, Node } from '../d3/models';
 import CONFIG from '../app.config';
+import { Link , Node } from '../d3/models';
 
 
 
