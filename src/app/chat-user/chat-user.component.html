@@ -1,16 +1,11 @@
-<div>
-  <div class="userListTitle">
-    Utenti Connessi
-  </div>
-  <div class="userList">
-    <mat-list>
-      <mat-list-item *ngFor="let utente of utenti">
-        <mat-icon matListIcon *ngIf="utente.isOnline" class="dot"> </mat-icon>
-        <mat-icon matListIcon *ngIf="!utente.isOnline" class="dotOffline"> </mat-icon>
-        <h3 matLine> {{utente.username}} </h3>
-        <p matLine>
-          <p class="text-time"> {{utente.lastAccess | date: 'dd/MM/yyyy  HH:mm'}} </p>
-      </mat-list-item>
-    </mat-list>
-  </div>
+<div class="userList">
+  <mat-list>
+    <mat-list-item *ngFor="let utente of utenti">
+      <mat-icon matListIcon *ngIf="utente.isOnline" class="dot"> </mat-icon>
+      <mat-icon matListIcon *ngIf="!utente.isOnline" class="dotOffline"> </mat-icon>
+      <h3 matLine> {{utente.username}} </h3>
+      <p matLine>
+        <p class="text-time"> {{utente.lastAccess | date: 'dd/MM/yyyy  HH:mm'}} </p>
+    </mat-list-item>
+  </mat-list>
 </div>

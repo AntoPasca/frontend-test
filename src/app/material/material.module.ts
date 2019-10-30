@@ -11,6 +11,7 @@ import {
   MatIconModule,
   MatFormFieldModule
 } from '@angular/material';
+import {MatExpansionModule} from '@angular/material/expansion'
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import {
     MatGridListModule,
     MatListModule,
     MatIconModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatExpansionModule
   ],
   declarations: [],
   exports: [
@@ -35,7 +37,8 @@ import {
     MatGridListModule,
     MatListModule,
     MatIconModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatExpansionModule
   ]
 })
 export class MaterialModule { }
