@@ -7,7 +7,8 @@
     </div>
     <ul #scroll class="messageArea">
         <li *ngFor="let messaggio of messaggi">
-            <div [ngClass]="{'admin': (user.role =='ADMIN' && messaggio.type != ChatMessageType.JOIN) }" (contextmenu)="deleteMessage(messaggio.id)">
+            <div [ngClass]="{'admin': (user.role =='ADMIN' && messaggio.type != ChatMessageType.JOIN) }"
+                (contextmenu)="deleteMessage(messaggio.id)">
                 <div *ngIf="messaggio.type == ChatMessageType.CHAT" class="chat-message">
                     <i [ngStyle]="applyStyle(messaggio.senderUsername)" class="circle">
                         <span style="color: white">{{messaggio.senderUsername | slice:0:1 }}</span>
@@ -20,6 +21,21 @@
                         <p class="text-time">{{messaggio.sendTime | date: 'dd/MM/yyyy  HH:mm'}}</p>
                     </div>
                 </div>
+                <a *ngIf="messaggio.linkPage" href={{messaggio.linkPage.url}} target="_blank">
+                    <div class="linkPage">
+                        <mat-grid-list [cols]="12">
+                            <mat-grid-tile [colspan]="1">
+                                <img style="height: 45px;"src={{messaggio.linkPage.image}}>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="2">
+                                <a href={{messaggio.linkPage.url}} target="_blank">{{messaggio.linkPage.title}}</a>
+                            </mat-grid-tile>
+                            <mat-grid-tile [colspan]="9">
+                                <p>{{messaggio.linkPage.description}}</p>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                </a>
                 <div *ngIf="messaggio.type == ChatMessageType.JOIN || messaggio.type == ChatMessageType.LEAVE"
                     class="event-message">
                     <p>{{messaggio.content}}</p>

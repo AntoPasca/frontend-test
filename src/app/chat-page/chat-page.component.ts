@@ -1,3 +1,4 @@
+import { LinkPage } from './../dto/LinkPage';
 import { ForwardChatMessage, IncomingChatMessage } from '../dto/ChatMessage';
 import { Component, OnInit, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
 import * as Stomp from '@stomp/stompjs';

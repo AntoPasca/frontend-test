@@ -1,3 +1,4 @@
+import { LinkPage } from './LinkPage';
 import { ChatMessageType } from '../enum/ChatMessageType';
 /*
 oggetto utilizzato per comunicazione da FE a BE. oggetto in uscita dall'utente verso molti
@@ -18,4 +19,5 @@ export class IncomingChatMessage {
     public senderUsername: string;
     public roomTitle: string;
     public sendTime: Date;
+    public linkPage: LinkPage;
 }
