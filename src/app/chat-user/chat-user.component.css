@@ -14,21 +14,12 @@
    display: inline-block;
  }
 
- .userListTitle {
-   background-color: #128FF2;
-   font-family: myFirstFont;
-   border: 1px solid #128ff2;
-   border-radius: 20px;
-   text-align: center;
-   color: white;
- }
-
  .userList {
    overflow-y: scroll;
    width: 20em;
    height: 28em;
-   border: solid 1px #128ff2;
-   border-radius: 20px;
+   /* border: solid 1px #128ff2;
+   border-radius: 20px; */
    background-color: white;
  }
 
