@@ -28,7 +28,7 @@
     "@stomp/stompjs": "^4.0.7",
     "@types/stompjs": "^2.3.4",
     "core-js": "^2.5.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "path": "^0.12.7",
     "rxjs": "6.0.0",
     "typescript": "~2.7.2",
